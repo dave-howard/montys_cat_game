@@ -1,6 +1,7 @@
 import pygame, sys
 from pygame.locals import *
-
+import os
+basedir = os.path.abspath(os.path.dirname(__file__))
 pygame.init()
 
 FPS = 50
@@ -13,7 +14,7 @@ pygame.display.set_caption("Animation")
 WHITE = (255,255,255)
 GREEN = (0,255,0)
 BLUE = (0,0,255)
-catImg = pygame.image.load("cat.png").convert_alpha()
+catImg = pygame.image.load(os.path.join(basedir,"cat.png")).convert_alpha()
 catImg.set_alpha(128)
 catx = 10
 caty = 10
@@ -52,7 +53,7 @@ while True:
     if len(events):
         for event in events:
             if event.type == QUIT:
-                soundObj = pygame.mixer.Sound('stop.wav')
+                soundObj = pygame.mixer.Sound(os.path.join(basedir, 'stop.wav'))
                 soundObj.play()
                 fpsClock.tick(1)
                 pygame.quit()
