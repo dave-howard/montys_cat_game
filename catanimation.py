@@ -27,17 +27,29 @@ DISPLAYSURF.fill(WHITE)
 
 positions = []
 
-def move(catx, caty, mousepos):
+
+def handle_mouse_move(catx, caty, mousepos):
     mousex, mousey = mousepos
     #normalise mousex/y for size of cat image (125 x 79)
     mousex-=79/2
     mousey-=125/2
-    newcatx = catx
-    newcaty = caty
     newcatx = catx + (mousex - catx) / 10
     newcaty = caty + (mousey - caty) / 10
     return (newcatx, newcaty)
 
+
+def move_cat(x,y, positions):
+    positions.append((x, y))
+    if len(positions) > 50:
+        positions = positions[1:]
+    return positions
+
+
+fontObj = pygame.font.Font('freesansbold.ttf', 24)
+textSurfaceObjUp = fontObj.render('UP', True, GREEN, BLUE)
+textSurfaceObjDown = fontObj.render('DOWN', True, GREEN, BLUE)
+textSurfaceObjLeft = fontObj.render('LEFT', True, GREEN, BLUE)
+textSurfaceObjRight = fontObj.render('RIGHT', True, GREEN, BLUE)
 
 while True:
     DISPLAYSURF.fill(WHITE)
@@ -59,7 +71,7 @@ while True:
                 pygame.quit()
                 sys.exit()
             elif event.type == MOUSEMOTION:
-                catx, caty = move(catx, caty, event.pos)
+                catx, caty = handle_mouse_move(catx, caty, event.pos)
                 positions.append((catx, caty))
                 if len(positions) > 50:
                     positions = positions[1:]
@@ -73,6 +85,34 @@ while True:
         # alpha_cat.set_alpha(alpha)
         DISPLAYSURF.blit(pygame.transform.rotate(alpha_cat, alpha), pos)
         alpha -= float(360.0 / 50.0)
+
+    if (pygame.key.get_pressed()[pygame.K_UP]):
+        caty -= 10
+        rect = textSurfaceObjUp.get_rect()
+        rect.center = (catx, caty)
+        DISPLAYSURF.blit(textSurfaceObjUp, rect)
+        positions = move_cat(catx, caty, positions)
+
+    if (pygame.key.get_pressed()[pygame.K_DOWN]):
+        caty+=10
+        rect = textSurfaceObjDown.get_rect()
+        rect.center = (catx, caty)
+        DISPLAYSURF.blit(textSurfaceObjDown, rect)
+        positions = move_cat(catx, caty, positions)
+
+    if (pygame.key.get_pressed()[pygame.K_LEFT]):
+        catx-=10
+        rect = textSurfaceObjLeft.get_rect()
+        rect.center = (catx, caty)
+        DISPLAYSURF.blit(textSurfaceObjLeft, rect)
+        positions = move_cat(catx, caty, positions)
+
+    if (pygame.key.get_pressed()[pygame.K_RIGHT]):
+        catx+=10
+        rect = textSurfaceObjRight.get_rect()
+        rect.center = (catx, caty)
+        DISPLAYSURF.blit(textSurfaceObjRight, rect)
+        positions = move_cat(catx, caty, positions)
 
     print (len(positions))
     pygame.display.update()
